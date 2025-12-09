@@ -3,123 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Notulen & Problem Solving</title>
+    <title>Dashboard Notulen Yanoshi</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F1F5F9; }
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        /* Scrollbar cantik */
-        ::-webkit-scrollbar { width: 5px; }
+        /* Scrollbar custom */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
     </style>
 </head>
-<body class="text-slate-700 pb-20">
+<body class="text-slate-700 pb-24">
 
-    <nav class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 px-4 py-4 shadow-sm">
-        <div class="max-w-md mx-auto flex justify-between items-center">
-            <h1 class="text-lg font-bold text-slate-800 tracking-tight flex items-center gap-2">
-                <div class="bg-blue-600 text-white p-1.5 rounded-lg text-xs">
-                    <i class="fa-solid fa-check-double"></i>
+    <nav class="glass-effect sticky top-0 z-40 border-b border-slate-200 px-4 py-4 shadow-sm">
+        <div class="max-w-xl mx-auto flex justify-between items-center">
+            <h1 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <div class="bg-indigo-600 text-white p-1.5 rounded-lg text-sm">
+                    <i class="fa-solid fa-layer-group"></i>
                 </div>
-                Notulen Yanoshi
+                Notulen<span class="text-indigo-600">Corner</span>
             </h1>
-            <div id="connectionStatus" class="text-[10px] font-semibold text-emerald-600 flex items-center bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100">
+            <div id="connectionStatus" class="text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 flex items-center border border-emerald-200">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span> ONLINE
             </div>
         </div>
     </nav>
 
-    <main class="max-w-md mx-auto px-4 mt-6 space-y-8">
+    <main class="max-w-xl mx-auto px-4 mt-6 space-y-6">
 
-        <section class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 overflow-hidden relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
             <h2 class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-pen-to-square"></i> Input Notulen
+                <i class="fa-solid fa-pen-to-square text-indigo-500"></i> Input Notulen Baru
             </h2>
             
-            <div class="mb-4">
-                <label class="block text-xs font-semibold mb-1.5 text-slate-500">Tanggal Notulen</label>
-                <input type="date" id="dateInput" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium text-slate-700 transition">
+            <div class="grid grid-cols-2 gap-3 mb-3">
+                <div class="col-span-1">
+                    <label class="block text-[10px] font-bold uppercase mb-1 text-slate-500">Tanggal Notulen</label>
+                    <input type="date" id="dateInput" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs font-semibold text-slate-700">
+                </div>
+                <div class="col-span-1">
+                    <label class="block text-[10px] font-bold uppercase mb-1 text-slate-500">Divisi</label>
+                    <div class="relative">
+                        <select id="divisiInput" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none cursor-pointer">
+                            <option value="Admin">Admin</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Marketing / Multimedia">Marketing / Multimedia</option>
+                            <option value="Lainnya">Lainnya</option>
+                            <option value="Urgent" class="text-red-600 font-bold">🚨 URGENT</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-400 text-xs">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div id="problemInputsContainer" class="space-y-3">
+            <div id="problemInputsContainer" class="space-y-2">
                 </div>
 
-            <button onclick="addInputRow()" class="mt-4 w-full py-2.5 border-2 border-dashed border-slate-200 text-slate-400 rounded-xl hover:border-blue-300 hover:text-blue-500 hover:bg-blue-50 transition text-sm font-medium flex items-center justify-center gap-2">
+            <button onclick="addInputRow()" class="mt-4 w-full py-2 border border-dashed border-slate-300 text-slate-400 rounded-xl hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 transition text-xs font-bold flex items-center justify-center gap-2">
                 <i class="fa-solid fa-plus"></i> Tambah Baris Notulen
             </button>
 
-            <button onclick="submitProblems()" id="submitBtn" class="mt-6 w-full bg-slate-900 text-white py-3 rounded-xl font-semibold shadow-lg shadow-slate-200 hover:bg-slate-800 active:scale-95 transition flex justify-center items-center gap-2 text-sm">
-                <span>Submit ke Rekap</span>
+            <button onclick="submitProblems()" id="submitBtn" class="mt-5 w-full bg-slate-900 text-white py-3 rounded-xl font-bold shadow-lg shadow-slate-200 hover:bg-slate-800 active:scale-95 transition flex justify-center items-center gap-2 text-sm">
+                <span>Kirim ke Rekap</span>
                 <i class="fa-solid fa-paper-plane"></i>
             </button>
         </section>
 
         <section>
-            <div class="flex flex-col gap-3 mb-6">
-                <div class="flex justify-between items-end">
-                    <h2 class="text-xs uppercase tracking-wider text-slate-400 font-bold flex items-center gap-2">
-                        <i class="fa-solid fa-list-ul"></i> Rekapitulasi
-                    </h2>
-                    <button onclick="fetchData()" class="text-[10px] font-semibold text-blue-500 hover:bg-blue-50 px-2 py-1 rounded transition">
-                        <i class="fa-solid fa-arrows-rotate mr-1"></i> Refresh
-                    </button>
-                </div>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xs uppercase tracking-wider text-slate-400 font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-indigo-500"></i> Rekapitulasi
+                </h2>
+                <button onclick="openModal()" class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition border border-indigo-200">
+                    <i class="fa-solid fa-expand mr-1"></i> Lihat Rekap Penuh
+                </button>
+            </div>
 
-                <div class="flex gap-2 items-center bg-white p-2 rounded-xl border border-slate-200 shadow-sm">
-                    <div class="relative flex-grow">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fa-regular fa-calendar text-slate-400 text-xs"></i>
-                        </div>
-                        <input type="date" id="filterDateInput" onchange="applyFilter()" 
-                            class="w-full bg-transparent border-none rounded-lg pl-9 pr-2 py-1 text-xs font-semibold text-slate-600 focus:ring-0 outline-none placeholder-slate-400">
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm mb-4 space-y-2">
+                <div class="text-[10px] font-bold text-slate-400 uppercase">Filter Data:</div>
+                <div class="flex gap-2">
+                    <div class="relative w-1/2">
+                        <input type="date" id="filterDate" onchange="applyFilter()" class="w-full bg-slate-50 border-none rounded-lg text-xs font-medium text-slate-600 focus:ring-2 focus:ring-indigo-100 py-2 px-3">
                     </div>
-                    <button onclick="clearFilter()" id="clearFilterBtn" class="hidden px-3 py-1.5 text-[10px] font-bold text-slate-500 bg-slate-100 rounded-lg hover:bg-slate-200 transition">
-                        RESET
-                    </button>
+                    <div class="relative w-1/2">
+                        <select id="filterDivisi" onchange="applyFilter()" class="w-full bg-slate-50 border-none rounded-lg text-xs font-medium text-slate-600 focus:ring-2 focus:ring-indigo-100 py-2 px-3 appearance-none">
+                            <option value="">Semua Divisi</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Marketing / Multimedia">Marketing/Multi</option>
+                            <option value="Lainnya">Lainnya</option>
+                            <option value="Urgent">🚨 Urgent</option>
+                        </select>
+                        <i class="fa-solid fa-filter absolute right-3 top-2.5 text-slate-300 text-xs pointer-events-none"></i>
+                    </div>
+                </div>
+                <div id="filterResetContainer" class="hidden">
+                    <button onclick="resetFilter()" class="w-full text-[10px] bg-slate-100 text-slate-500 py-1 rounded hover:bg-slate-200 font-bold">Reset Filter</button>
                 </div>
             </div>
             
-            <div id="loadingIndicator" class="hidden text-center py-12 bg-white rounded-xl border border-dashed border-slate-200">
-                <i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-500 mb-2"></i>
-                <p class="text-xs text-slate-400 font-medium">Sinkronisasi data...</p>
+            <div id="loadingIndicator" class="hidden text-center py-12">
+                <i class="fa-solid fa-circle-notch fa-spin text-2xl text-indigo-500 mb-2"></i>
+                <p class="text-xs text-slate-400 font-medium">Sinkronisasi...</p>
             </div>
 
-            <div id="rekapContainer" class="space-y-4 pb-10 min-h-[200px]">
-                </div>
+            <div id="rekapContainer" class="space-y-4 pb-10 min-h-[200px]"></div>
         </section>
-
     </main>
 
-    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs font-medium py-2.5 px-5 rounded-full shadow-2xl opacity-0 transition-all duration-300 pointer-events-none z-50 flex items-center gap-2 translate-y-10">
-        <i class="fa-solid fa-circle-info text-blue-400"></i> <span id="toastMsg">Notifikasi</span>
+    <div id="fullRekapModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+        
+        <div class="absolute inset-x-0 bottom-0 top-10 sm:inset-10 bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col transform transition-transform duration-300 translate-y-full sm:translate-y-0" id="modalContent">
+            
+            <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex justify-between items-center sticky top-0">
+                <div>
+                    <h3 class="font-bold text-slate-800 text-lg">Rekapitulasi Lengkap</h3>
+                    <p class="text-xs text-slate-500" id="modalTotalCount">Menampilkan seluruh data</p>
+                </div>
+                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-red-50 hover:text-red-500 transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="modalBody" class="flex-1 overflow-y-auto p-6 bg-slate-50 space-y-3">
+                </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs font-medium py-3 px-6 rounded-full shadow-2xl opacity-0 transition-all duration-300 pointer-events-none z-[60] flex items-center gap-2 translate-y-10">
+        <span id="toastIcon"><i class="fa-solid fa-check-circle text-emerald-400"></i></span> 
+        <span id="toastMsg">Notifikasi</span>
     </div>
 
     <script>
         // --- KONFIGURASI ---
-        // !!! GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT APPSCRIPT ANDA !!!
         const API_URL = 'https://script.google.com/macros/s/AKfycbyJPqQGeDeLZgoF3rLgh5nDaMDBk5cbbcTy26D1zC4QWLfXa7S_BVbNLhlWjLt3BzJD/exec'; 
 
-        // --- STATE VARIABLES ---
+        // --- STATE ---
         let appData = [];
         let openSolutionInputs = {}; 
         let activeFilterDate = ''; 
+        let activeFilterDivisi = '';
 
-        // --- INITIALIZATION ---
+        // --- INIT ---
         document.addEventListener('DOMContentLoaded', () => {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('dateInput').value = today;
-            
-            loadDrafts(); // Load draft input kalau ada
-            fetchData();  // Tarik data pertama kali
-
-            // Auto-sync setiap 4 detik
+            loadDrafts(); 
+            fetchData();
             setInterval(fetchData, 4000);
         });
+
+        // --- UI HELPERS ---
+        function getDivisiBadge(divisi) {
+            const styles = {
+                'Urgent': 'bg-red-100 text-red-700 border-red-200',
+                'Sales': 'bg-blue-100 text-blue-700 border-blue-200',
+                'Admin': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                'Marketing / Multimedia': 'bg-purple-100 text-purple-700 border-purple-200',
+                'Lainnya': 'bg-slate-100 text-slate-600 border-slate-200'
+            };
+            const style = styles[divisi] || styles['Lainnya'];
+            const icon = divisi === 'Urgent' ? '<i class="fa-solid fa-triangle-exclamation mr-1"></i>' : '';
+            return `<span class="${style} border px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide inline-flex items-center">${icon}${divisi}</span>`;
+        }
 
         // --- INPUT FUNCTIONS ---
         const container = document.getElementById('problemInputsContainer');
@@ -129,290 +188,259 @@
             div.className = 'flex gap-2 items-center fade-in group';
             div.innerHTML = `
                 <div class="relative w-full">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fa-solid fa-caret-right text-slate-300 text-xs"></i>
-                    </div>
-                    <input type="text" value="${value}" 
-                        oninput="saveDrafts()"
-                        placeholder="Tulis masalah di sini..." 
-                        class="problem-input w-full bg-white border border-slate-200 rounded-lg pl-8 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm shadow-sm transition-all hover:border-slate-300">
+                    <input type="text" value="${value}" oninput="saveDrafts()" placeholder="Ketik masalah di sini..." 
+                        class="problem-input w-full bg-white border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs font-medium shadow-sm transition-all">
                 </div>
                 ${container.children.length > 0 ? `
-                <button onclick="this.parentElement.remove(); saveDrafts()" class="text-slate-300 hover:text-red-400 p-2 transition hover:bg-red-50 rounded-lg">
+                <button onclick="this.parentElement.remove(); saveDrafts()" class="text-slate-300 hover:text-red-500 p-2 transition">
                     <i class="fa-solid fa-times"></i>
                 </button>` : ''}
             `;
             container.appendChild(div);
         }
 
-        function addInputRow() {
-            createInputRow();
-            saveDrafts();
-        }
+        function addInputRow() { createInputRow(); saveDrafts(); }
 
         function saveDrafts() {
             const inputs = Array.from(document.querySelectorAll('.problem-input')).map(i => i.value);
-            localStorage.setItem('draft_problems', JSON.stringify(inputs));
+            localStorage.setItem('draft_problems_v2', JSON.stringify(inputs));
         }
 
         function loadDrafts() {
-            const saved = JSON.parse(localStorage.getItem('draft_problems') || '[]');
-            if (saved.length > 0) {
-                saved.forEach(val => createInputRow(val));
-            } else {
-                createInputRow(); 
-            }
+            const saved = JSON.parse(localStorage.getItem('draft_problems_v2') || '[]');
+            saved.length > 0 ? saved.forEach(val => createInputRow(val)) : createInputRow(); 
         }
 
-        // --- BACKEND API FUNCTIONS ---
+        // --- BACKEND CALLS ---
         async function submitProblems() {
             const btn = document.getElementById('submitBtn');
             const inputs = Array.from(document.querySelectorAll('.problem-input')).filter(i => i.value.trim() !== "");
             const date = document.getElementById('dateInput').value;
+            const divisi = document.getElementById('divisiInput').value;
 
-            if (inputs.length === 0) {
-                showToast("Mohon isi masalah terlebih dahulu");
-                return;
-            }
+            if (inputs.length === 0) { showToast("Isi minimal satu masalah", "error"); return; }
 
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...`;
             btn.disabled = true;
-            btn.classList.add('opacity-75', 'cursor-not-allowed');
 
             const payload = inputs.map(i => ({ text: i.value }));
 
             try {
                 await fetch(API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({ action: 'submitProblems', date: date, payload: payload })
+                    method: 'POST', mode: 'no-cors',
+                    body: JSON.stringify({ action: 'submitProblems', date, divisi, payload })
                 });
                 
-                container.innerHTML = '';
-                createInputRow();
-                localStorage.removeItem('draft_problems');
-                showToast("Masalah berhasil disubmit!");
-                
+                container.innerHTML = ''; createInputRow();
+                localStorage.removeItem('draft_problems_v2');
+                showToast("Masalah berhasil direkam!");
                 await fetchData(); 
 
-            } catch (e) {
-                showToast("Gagal mengirim data. Cek koneksi.");
-                console.error(e);
-            } finally {
-                btn.innerHTML = `<span>Submit ke Rekap</span><i class="fa-solid fa-paper-plane text-xs"></i>`;
-                btn.disabled = false;
-                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            } catch (e) { console.error(e); showToast("Gagal mengirim data", "error"); } 
+            finally { 
+                btn.innerHTML = `<span>Kirim ke Rekap</span><i class="fa-solid fa-paper-plane"></i>`;
+                btn.disabled = false; 
             }
         }
 
         async function fetchData() {
             const loading = document.getElementById('loadingIndicator');
-            // Hanya loading saat data kosong agar tidak kedip-kedip saat polling
             if (appData.length === 0) loading.classList.remove('hidden');
 
             try {
                 const response = await fetch(API_URL);
                 const result = await response.json();
                 
-                // Cek apakah ada perubahan data sebelum render ulang (Performance)
                 if (JSON.stringify(result) !== JSON.stringify(appData)) {
                     appData = result;
                     renderRekap();
+                    if(document.getElementById('fullRekapModal').classList.contains('hidden') === false) {
+                        renderModalContent(); // Update modal juga jika sedang terbuka
+                    }
                 }
-                
-                // Update status UI
+                document.getElementById('connectionStatus').classList.replace('text-red-600', 'text-emerald-600');
+                document.getElementById('connectionStatus').classList.replace('bg-red-50', 'bg-emerald-100');
                 document.getElementById('connectionStatus').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span> ONLINE`;
-                document.getElementById('connectionStatus').className = "text-[10px] font-semibold text-emerald-600 flex items-center bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100";
-
             } catch (e) {
-                console.error("Sync error", e);
+                document.getElementById('connectionStatus').classList.replace('text-emerald-600', 'text-red-600');
+                document.getElementById('connectionStatus').classList.replace('bg-emerald-100', 'bg-red-50');
                 document.getElementById('connectionStatus').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-1.5"></span> OFFLINE`;
-                document.getElementById('connectionStatus').className = "text-[10px] font-semibold text-red-600 flex items-center bg-red-50 px-2 py-1 rounded-full border border-red-100";
-            } finally {
-                loading.classList.add('hidden');
-            }
+            } finally { loading.classList.add('hidden'); }
         }
 
-        // --- FILTER LOGIC ---
+        // --- FILTER & RENDER ---
         function applyFilter() {
-            const dateVal = document.getElementById('filterDateInput').value;
-            activeFilterDate = dateVal;
+            activeFilterDate = document.getElementById('filterDate').value;
+            activeFilterDivisi = document.getElementById('filterDivisi').value;
             
-            const clearBtn = document.getElementById('clearFilterBtn');
-            if (activeFilterDate) {
-                clearBtn.classList.remove('hidden');
-            } else {
-                clearBtn.classList.add('hidden');
-            }
+            const hasFilter = activeFilterDate || activeFilterDivisi;
+            document.getElementById('filterResetContainer').className = hasFilter ? 'block animate-fade-in' : 'hidden';
+            
             renderRekap();
         }
 
-        function clearFilter() {
-            document.getElementById('filterDateInput').value = '';
-            activeFilterDate = '';
-            document.getElementById('clearFilterBtn').classList.add('hidden');
-            renderRekap();
+        function resetFilter() {
+            document.getElementById('filterDate').value = '';
+            document.getElementById('filterDivisi').value = '';
+            applyFilter();
         }
 
-        // --- RENDER LOGIC ---
+        function getFilteredData() {
+            let data = [...appData].reverse();
+            if (activeFilterDate) data = data.filter(i => i.date === activeFilterDate);
+            if (activeFilterDivisi) data = data.filter(i => i.divisi === activeFilterDivisi);
+            return data;
+        }
+
         function renderRekap() {
             const container = document.getElementById('rekapContainer');
             container.innerHTML = '';
+            const data = getFilteredData();
 
-            let processedData = [...appData].reverse(); 
-
-            // Filter Process
-            if (activeFilterDate) {
-                processedData = processedData.filter(item => item.date === activeFilterDate);
-            }
-
-            // Empty State
-            if (processedData.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-10 opacity-50 flex flex-col items-center">
-                        <div class="bg-slate-100 p-4 rounded-full mb-3">
-                            <i class="fa-solid fa-box-open text-2xl text-slate-300"></i>
-                        </div>
-                        <p class="text-sm text-slate-400 font-medium">Belum ada data ${activeFilterDate ? 'di tanggal ini' : ''}.</p>
-                    </div>
-                `;
+            if (data.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 opacity-50"><p class="text-xs text-slate-400 font-bold">Tidak ada data ditemukan.</p></div>`;
                 return;
             }
 
-            processedData.forEach(item => {
+            data.forEach(item => {
+                // Card UI
                 const isDone = item.isDone;
-                // Styling dinamis: Hijau Pastel jika Done
-                const cardClass = isDone 
-                    ? 'bg-emerald-50/60 border-emerald-200' 
-                    : 'bg-white border-slate-200';
-                
+                const cardClass = isDone ? 'bg-emerald-50/50 border-emerald-200' : 'bg-white border-slate-200';
+                const divBadge = getDivisiBadge(item.divisi);
                 const isInputOpen = openSolutionInputs[item.id] === true;
-                const inputDisplay = isInputOpen ? 'block' : 'hidden';
 
-                let solutionsHtml = '';
-                if (item.solutions && item.solutions.length > 0) {
-                    solutionsHtml = item.solutions.map(sol => `
-                        <div class="flex justify-between items-start text-xs bg-white/60 p-2.5 rounded-lg border border-slate-100 mt-2 group hover:border-blue-100 transition">
-                            <div class="flex gap-2.5">
-                                <i class="fa-solid fa-reply fa-rotate-180 text-slate-300 mt-0.5"></i>
-                                <span class="text-slate-600 font-medium leading-relaxed">${sol.text}</span>
-                            </div>
-                            <button onclick="deleteSolution('${item.id}', '${sol.id}')" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition p-1">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
+                let solHtml = item.solutions.map(s => `
+                    <div class="flex justify-between items-start text-[11px] bg-white p-2 rounded border border-slate-100 mt-1.5 group">
+                        <div class="flex gap-2">
+                            <i class="fa-solid fa-reply fa-rotate-180 text-slate-300 mt-0.5"></i>
+                            <span class="text-slate-600 leading-relaxed">${s.text}</span>
                         </div>
-                    `).join('');
-                }
+                        <button onclick="deleteSolution('${item.id}', '${s.id}')" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                `).join('');
 
-                const html = `
-                <div class="${cardClass} rounded-2xl p-5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] border transition-all duration-300 animate-fade-in group hover:shadow-md">
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="pr-4">
-                            <span class="inline-flex items-center gap-1.5 text-[10px] uppercase font-bold ${activeFilterDate ? 'text-blue-500' : 'text-slate-400'} tracking-wider mb-1">
-                                <i class="fa-regular fa-clock"></i> ${item.date}
-                            </span>
-                            <p class="text-sm font-semibold text-slate-800 leading-snug">${item.text}</p>
+                container.innerHTML += `
+                <div class="${cardClass} rounded-xl p-4 shadow-sm border transition-all animate-fade-in group hover:shadow-md relative">
+                    <button onclick="deleteProblem('${item.id}')" class="absolute top-3 right-3 text-slate-200 hover:text-red-400 transition" title="Hapus Masalah">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+
+                    <div class="mb-2 pr-6">
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <span class="text-[10px] font-bold text-slate-400"><i class="fa-regular fa-clock"></i> ${item.date}</span>
+                            ${divBadge}
                         </div>
-                        <div class="flex gap-1 shrink-0">
-                            ${isDone ? 
-                                `<button onclick="toggleStatus('${item.id}', false)" class="text-[10px] bg-white text-slate-500 border border-slate-200 px-2.5 py-1 rounded-full hover:bg-slate-50 font-bold transition shadow-sm">
-                                    <i class="fa-solid fa-rotate-left mr-1"></i> UNDO
-                                 </button>` : 
-                                `<button onclick="toggleStatus('${item.id}', true)" class="text-[10px] bg-slate-800 text-white border border-slate-800 px-2.5 py-1 rounded-full hover:bg-slate-700 font-bold shadow-lg shadow-slate-200 transition active:scale-95">
-                                    DONE <i class="fa-solid fa-check ml-1"></i>
-                                 </button>`
-                            }
-                        </div>
+                        <p class="text-sm font-semibold text-slate-800 leading-snug">${item.text}</p>
                     </div>
 
-                    <div class="mt-3 pl-1 space-y-1">
-                        ${solutionsHtml}
-                    </div>
-
-                    <div class="mt-4 pt-3 border-t border-slate-100/50">
-                        <button onclick="showSolutionInput('${item.id}')" class="text-xs text-blue-500 font-bold hover:text-blue-600 flex items-center gap-1.5 transition px-2 py-1 rounded hover:bg-blue-50 -ml-2">
-                            <i class="fa-solid fa-plus-circle"></i> Tambah Solusi
+                    <div class="flex gap-2 mb-3">
+                        <button onclick="toggleStatus('${item.id}', ${!isDone})" class="text-[10px] px-2 py-0.5 rounded border ${isDone ? 'bg-white text-slate-500 border-slate-200' : 'bg-slate-800 text-white border-slate-800'} font-bold transition">
+                            ${isDone ? 'UNDO' : 'DONE'}
                         </button>
+                    </div>
+
+                    <div class="pl-1 border-l-2 border-slate-100/80 space-y-1">${solHtml}</div>
+
+                    <div class="mt-3">
+                        ${!isInputOpen ? `
+                        <button onclick="showSolInput('${item.id}')" class="text-[10px] text-indigo-500 font-bold hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-plus"></i> Tambah Solusi
+                        </button>` : ''}
                         
-                        <div id="sol-input-${item.id}" class="${inputDisplay} mt-2 animate-fade-in">
-                            <div class="flex gap-2 items-center">
-                                <input type="text" id="sol-text-${item.id}" placeholder="Ketik solusi & tekan enter..." 
-                                    onkeydown="if(event.key === 'Enter') sendSolution('${item.id}')"
-                                    class="w-full text-xs bg-white border border-blue-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-100 text-slate-700 shadow-sm">
-                                <button onclick="sendSolution('${item.id}')" class="bg-blue-500 text-white rounded-lg px-3 py-2 hover:bg-blue-600 transition shadow-md active:scale-95">
-                                    <i class="fa-solid fa-paper-plane text-xs"></i>
-                                </button>
-                            </div>
+                        <div class="${isInputOpen ? 'flex' : 'hidden'} gap-2 mt-2 items-center">
+                            <input type="text" id="sol-${item.id}" class="w-full text-xs border border-indigo-200 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Solusi..." onkeydown="if(event.key==='Enter') sendSol('${item.id}')">
+                            <button onclick="sendSol('${item.id}')" class="bg-indigo-500 text-white rounded px-2 py-1.5 hover:bg-indigo-600"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+                            <button onclick="hideSolInput('${item.id}')" class="text-slate-400 hover:text-red-400 px-1"><i class="fa-solid fa-times"></i></button>
                         </div>
                     </div>
-                </div>
-                `;
-                container.innerHTML += html;
+                </div>`;
             });
         }
 
-        // --- INTERACTION LOGIC ---
-        function showSolutionInput(id) {
-            openSolutionInputs[id] = true;
-            renderRekap(); 
-            setTimeout(() => document.getElementById(`sol-text-${id}`).focus(), 100);
+        // --- MODAL LOGIC (Fitur 5) ---
+        function openModal() {
+            document.getElementById('fullRekapModal').classList.remove('hidden');
+            document.getElementById('modalContent').classList.remove('translate-y-full');
+            renderModalContent();
         }
 
-        async function sendSolution(problemId) {
-            const input = document.getElementById(`sol-text-${problemId}`);
-            const text = input.value;
-            if (!text) return;
+        function closeModal() {
+            document.getElementById('modalContent').classList.add('translate-y-full');
+            setTimeout(() => document.getElementById('fullRekapModal').classList.add('hidden'), 300);
+        }
 
-            input.disabled = true;
+        function renderModalContent() {
+            // Modal menampilkan semua data (atau bisa difilter juga, disini saya tampilkan semua yang terfilter)
+            const data = getFilteredData();
+            const container = document.getElementById('modalBody');
+            document.getElementById('modalTotalCount').innerText = `Menampilkan ${data.length} data`;
             
-            try {
-                await fetch(API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({ action: 'addSolution', problemId: problemId, solutionText: text })
-                });
-                openSolutionInputs[problemId] = false; 
-                fetchData(); 
-                showToast("Solusi ditambahkan");
-            } catch(e) { console.error(e); }
+            container.innerHTML = data.map(item => `
+                <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex flex-col gap-2">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] text-slate-400 font-bold">${item.date}</span>
+                                ${getDivisiBadge(item.divisi)}
+                            </div>
+                            <p class="font-bold text-slate-800 text-sm">${item.text}</p>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-1 rounded ${item.isDone ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}">${item.isDone ? 'DONE' : 'OPEN'}</span>
+                    </div>
+                    ${item.solutions.length > 0 ? `
+                        <div class="bg-slate-50 p-2 rounded text-xs text-slate-600 border border-slate-100 mt-1">
+                            <strong class="block mb-1 text-slate-400 text-[10px]">SOLUSI:</strong>
+                            <ul class="list-disc pl-4 space-y-1">${item.solutions.map(s => `<li>${s.text}</li>`).join('')}</ul>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
         }
 
-        async function toggleStatus(id, status) {
-            try {
-                // Optimistic UI Update
-                const currentItem = appData.find(i => i.id === id);
-                if(currentItem) currentItem.isDone = status;
-                renderRekap();
-
-                await fetch(API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({ action: 'toggleStatus', problemId: id, isDone: status })
-                });
-                fetchData();
-            } catch(e) { console.error(e); }
+        // --- ACTIONS ---
+        function showSolInput(id) { openSolutionInputs[id] = true; renderRekap(); setTimeout(() => document.getElementById(`sol-${id}`).focus(), 100); }
+        function hideSolInput(id) { openSolutionInputs[id] = false; renderRekap(); }
+        
+        async function sendSol(id) {
+            const txt = document.getElementById(`sol-${id}`).value;
+            if(!txt) return;
+            openSolutionInputs[id] = false; renderRekap(); // Optimistic close
+            await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'addSolution', problemId: id, solutionText: txt }) });
+            fetchData();
         }
 
-        async function deleteSolution(probId, solId) {
-            if(!confirm("Hapus solusi ini?")) return;
-            try {
-                await fetch(API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({ action: 'deleteSolution', problemId: probId, solutionId: solId })
-                });
-                fetchData();
-                showToast("Solusi dihapus");
-            } catch(e) { console.error(e); }
+        async function toggleStatus(id, stat) {
+            // Optimistic Update
+            const item = appData.find(i => i.id === id);
+            if(item) item.isDone = stat;
+            renderRekap();
+            await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'toggleStatus', problemId: id, isDone: stat }) });
+            fetchData();
         }
 
-        function showToast(msg) {
+        async function deleteProblem(id) {
+            if(!confirm("Hapus masalah ini secara permanen?")) return;
+            // Optimistic Remove
+            appData = appData.filter(i => i.id !== id);
+            renderRekap();
+            await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'deleteProblem', id }) });
+            fetchData();
+            showToast("Masalah dihapus");
+        }
+
+        async function deleteSolution(pid, sid) {
+            if(!confirm("Hapus solusi?")) return;
+            await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'deleteSolution', problemId: pid, solutionId: sid }) });
+            fetchData();
+        }
+
+        function showToast(msg, type='success') {
             const t = document.getElementById('toast');
             document.getElementById('toastMsg').innerText = msg;
+            document.getElementById('toastIcon').innerHTML = type === 'error' ? '<i class="fa-solid fa-circle-exclamation text-red-400"></i>' : '<i class="fa-solid fa-check-circle text-emerald-400"></i>';
             t.classList.remove('opacity-0', 'translate-y-10');
             setTimeout(() => t.classList.add('opacity-0', 'translate-y-10'), 3000);
         }
-
     </script>
 </body>
 </html>
