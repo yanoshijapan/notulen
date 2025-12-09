@@ -10,117 +10,135 @@
     
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
-        /* Animasi loading halus */
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        /* Scrollbar cantik */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body class="text-slate-700 pb-20">
 
-    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 px-4 py-4 shadow-sm">
+    <nav class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 px-4 py-4 shadow-sm">
         <div class="max-w-md mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold text-slate-800 tracking-tight">
-                <i class="fa-solid fa-clipboard-check text-blue-600 mr-2"></i>Notulen Yanoshi
+            <h1 class="text-lg font-bold text-slate-800 tracking-tight flex items-center gap-2">
+                <div class="bg-blue-600 text-white p-1.5 rounded-lg text-xs">
+                    <i class="fa-solid fa-check-double"></i>
+                </div>
+                Notulen Yanoshi
             </h1>
-            <div id="connectionStatus" class="text-xs font-medium text-emerald-600 flex items-center">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1 animate-pulse"></span> Online
+            <div id="connectionStatus" class="text-[10px] font-semibold text-emerald-600 flex items-center bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span> ONLINE
             </div>
         </div>
     </nav>
 
     <main class="max-w-md mx-auto px-4 mt-6 space-y-8">
 
-        <section class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-            <h2 class="text-sm uppercase tracking-wide text-slate-400 font-bold mb-4">Input Masalah Baru</h2>
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+            <h2 class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square"></i> Input Notulen
+            </h2>
             
             <div class="mb-4">
-                <label class="block text-sm font-medium mb-1 text-slate-600">Tanggal</label>
-                <input type="date" id="dateInput" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                <label class="block text-xs font-semibold mb-1.5 text-slate-500">Tanggal Notulen</label>
+                <input type="date" id="dateInput" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium text-slate-700 transition">
             </div>
 
             <div id="problemInputsContainer" class="space-y-3">
                 </div>
 
-            <button onclick="addInputRow()" class="mt-3 w-full py-2 border-2 border-dashed border-slate-200 text-slate-400 rounded-xl hover:border-blue-300 hover:text-blue-500 transition text-sm font-medium flex items-center justify-center gap-2">
-                <i class="fa-solid fa-plus"></i> Tambah Masalah Lainnya
+            <button onclick="addInputRow()" class="mt-4 w-full py-2.5 border-2 border-dashed border-slate-200 text-slate-400 rounded-xl hover:border-blue-300 hover:text-blue-500 hover:bg-blue-50 transition text-sm font-medium flex items-center justify-center gap-2">
+                <i class="fa-solid fa-plus"></i> Tambah Baris Notulen
             </button>
 
-            <button onclick="submitProblems()" id="submitBtn" class="mt-6 w-full bg-slate-900 text-white py-3 rounded-xl font-semibold shadow-lg shadow-slate-200 hover:bg-slate-800 active:scale-95 transition flex justify-center items-center gap-2">
-                <span>Submit Problem</span>
-                <i class="fa-solid fa-paper-plane text-xs"></i>
+            <button onclick="submitProblems()" id="submitBtn" class="mt-6 w-full bg-slate-900 text-white py-3 rounded-xl font-semibold shadow-lg shadow-slate-200 hover:bg-slate-800 active:scale-95 transition flex justify-center items-center gap-2 text-sm">
+                <span>Submit ke Rekap</span>
+                <i class="fa-solid fa-paper-plane"></i>
             </button>
         </section>
 
         <section>
-            <div class="flex justify-between items-end mb-4">
-                <h2 class="text-sm uppercase tracking-wide text-slate-400 font-bold">Rekapitulasi</h2>
-                <button onclick="fetchData()" class="text-xs text-blue-500 hover:underline">Refresh Manual</button>
+            <div class="flex flex-col gap-3 mb-6">
+                <div class="flex justify-between items-end">
+                    <h2 class="text-xs uppercase tracking-wider text-slate-400 font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-list-ul"></i> Rekapitulasi
+                    </h2>
+                    <button onclick="fetchData()" class="text-[10px] font-semibold text-blue-500 hover:bg-blue-50 px-2 py-1 rounded transition">
+                        <i class="fa-solid fa-arrows-rotate mr-1"></i> Refresh
+                    </button>
+                </div>
+
+                <div class="flex gap-2 items-center bg-white p-2 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="relative flex-grow">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-regular fa-calendar text-slate-400 text-xs"></i>
+                        </div>
+                        <input type="date" id="filterDateInput" onchange="applyFilter()" 
+                            class="w-full bg-transparent border-none rounded-lg pl-9 pr-2 py-1 text-xs font-semibold text-slate-600 focus:ring-0 outline-none placeholder-slate-400">
+                    </div>
+                    <button onclick="clearFilter()" id="clearFilterBtn" class="hidden px-3 py-1.5 text-[10px] font-bold text-slate-500 bg-slate-100 rounded-lg hover:bg-slate-200 transition">
+                        RESET
+                    </button>
+                </div>
             </div>
             
-            <div id="loadingIndicator" class="hidden text-center py-10">
-                <i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-500"></i>
-                <p class="text-xs text-slate-400 mt-2">Sinkronisasi data...</p>
+            <div id="loadingIndicator" class="hidden text-center py-12 bg-white rounded-xl border border-dashed border-slate-200">
+                <i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-500 mb-2"></i>
+                <p class="text-xs text-slate-400 font-medium">Sinkronisasi data...</p>
             </div>
 
-            <div id="rekapContainer" class="space-y-4 pb-10">
+            <div id="rekapContainer" class="space-y-4 pb-10 min-h-[200px]">
                 </div>
         </section>
 
     </main>
 
-    <div id="toast" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-full shadow-xl opacity-0 transition-opacity duration-300 pointer-events-none z-50 flex items-center gap-2">
-        <i class="fa-solid fa-info-circle"></i> <span id="toastMsg">Notification</span>
+    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs font-medium py-2.5 px-5 rounded-full shadow-2xl opacity-0 transition-all duration-300 pointer-events-none z-50 flex items-center gap-2 translate-y-10">
+        <i class="fa-solid fa-circle-info text-blue-400"></i> <span id="toastMsg">Notifikasi</span>
     </div>
 
     <script>
         // --- KONFIGURASI ---
-        // GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT ANDA
+        // !!! GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT APPSCRIPT ANDA !!!
         const API_URL = 'https://script.google.com/macros/s/AKfycbyJPqQGeDeLZgoF3rLgh5nDaMDBk5cbbcTy26D1zC4QWLfXa7S_BVbNLhlWjLt3BzJD/exec'; 
 
-        // --- STATE MANAGEMENT ---
+        // --- STATE VARIABLES ---
         let appData = [];
-        let openSolutionInputs = {}; // Menyimpan state kolom input solusi yang sedang terbuka
+        let openSolutionInputs = {}; 
+        let activeFilterDate = ''; 
 
-        // --- LOCAL STORAGE & INIT ---
+        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Set Default Date
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('dateInput').value = today;
+            
+            loadDrafts(); // Load draft input kalau ada
+            fetchData();  // Tarik data pertama kali
 
-            // Load Draft Problem Inputs
-            loadDrafts();
-
-            // Initial Fetch
-            fetchData();
-
-            // Polling Real-time (Setiap 4 detik)
+            // Auto-sync setiap 4 detik
             setInterval(fetchData, 4000);
         });
 
-        // --- INPUT LOGIC ---
+        // --- INPUT FUNCTIONS ---
         const container = document.getElementById('problemInputsContainer');
 
         function createInputRow(value = '') {
             const div = document.createElement('div');
-            div.className = 'flex gap-2 items-center fade-in';
+            div.className = 'flex gap-2 items-center fade-in group';
             div.innerHTML = `
                 <div class="relative w-full">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fa-solid fa-circle-exclamation text-slate-300 text-xs"></i>
+                        <i class="fa-solid fa-caret-right text-slate-300 text-xs"></i>
                     </div>
                     <input type="text" value="${value}" 
                         oninput="saveDrafts()"
-                        placeholder="Tulis masalah..." 
-                        class="problem-input w-full bg-white border border-slate-200 rounded-lg pl-9 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm shadow-sm">
+                        placeholder="Tulis masalah di sini..." 
+                        class="problem-input w-full bg-white border border-slate-200 rounded-lg pl-8 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm shadow-sm transition-all hover:border-slate-300">
                 </div>
                 ${container.children.length > 0 ? `
-                <button onclick="this.parentElement.remove(); saveDrafts()" class="text-slate-300 hover:text-red-400 p-2">
+                <button onclick="this.parentElement.remove(); saveDrafts()" class="text-slate-300 hover:text-red-400 p-2 transition hover:bg-red-50 rounded-lg">
                     <i class="fa-solid fa-times"></i>
                 </button>` : ''}
             `;
@@ -142,11 +160,11 @@
             if (saved.length > 0) {
                 saved.forEach(val => createInputRow(val));
             } else {
-                createInputRow(); // Default 1 row
+                createInputRow(); 
             }
         }
 
-        // --- API INTERACTION ---
+        // --- BACKEND API FUNCTIONS ---
         async function submitProblems() {
             const btn = document.getElementById('submitBtn');
             const inputs = Array.from(document.querySelectorAll('.problem-input')).filter(i => i.value.trim() !== "");
@@ -159,82 +177,127 @@
 
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...`;
             btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
 
             const payload = inputs.map(i => ({ text: i.value }));
 
             try {
                 await fetch(API_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // GAS simple mode
+                    mode: 'no-cors',
                     body: JSON.stringify({ action: 'submitProblems', date: date, payload: payload })
                 });
                 
-                // Clear inputs
                 container.innerHTML = '';
                 createInputRow();
                 localStorage.removeItem('draft_problems');
                 showToast("Masalah berhasil disubmit!");
                 
-                // Refresh data segera
                 await fetchData(); 
 
             } catch (e) {
-                showToast("Gagal mengirim data.");
+                showToast("Gagal mengirim data. Cek koneksi.");
                 console.error(e);
             } finally {
                 btn.innerHTML = `<span>Submit ke Rekap</span><i class="fa-solid fa-paper-plane text-xs"></i>`;
                 btn.disabled = false;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
             }
         }
 
         async function fetchData() {
             const loading = document.getElementById('loadingIndicator');
-            // Hanya tampilkan loading jika data kosong (initial load) agar tidak mengganggu user saat polling
+            // Hanya loading saat data kosong agar tidak kedip-kedip saat polling
             if (appData.length === 0) loading.classList.remove('hidden');
 
             try {
                 const response = await fetch(API_URL);
                 const result = await response.json();
                 
-                // Simple Diff Check (biar ga render ulang kalau data sama persis)
+                // Cek apakah ada perubahan data sebelum render ulang (Performance)
                 if (JSON.stringify(result) !== JSON.stringify(appData)) {
                     appData = result;
                     renderRekap();
                 }
+                
+                // Update status UI
+                document.getElementById('connectionStatus').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span> ONLINE`;
+                document.getElementById('connectionStatus').className = "text-[10px] font-semibold text-emerald-600 flex items-center bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100";
+
             } catch (e) {
                 console.error("Sync error", e);
-                document.getElementById('connectionStatus').innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500 mr-1"></span> Offline`;
+                document.getElementById('connectionStatus').innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-1.5"></span> OFFLINE`;
+                document.getElementById('connectionStatus').className = "text-[10px] font-semibold text-red-600 flex items-center bg-red-50 px-2 py-1 rounded-full border border-red-100";
             } finally {
                 loading.classList.add('hidden');
             }
         }
 
-        // --- RENDERING LOGIC ---
+        // --- FILTER LOGIC ---
+        function applyFilter() {
+            const dateVal = document.getElementById('filterDateInput').value;
+            activeFilterDate = dateVal;
+            
+            const clearBtn = document.getElementById('clearFilterBtn');
+            if (activeFilterDate) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+            renderRekap();
+        }
+
+        function clearFilter() {
+            document.getElementById('filterDateInput').value = '';
+            activeFilterDate = '';
+            document.getElementById('clearFilterBtn').classList.add('hidden');
+            renderRekap();
+        }
+
+        // --- RENDER LOGIC ---
         function renderRekap() {
             const container = document.getElementById('rekapContainer');
             container.innerHTML = '';
 
-            // Sort by latest (bisa disesuaikan)
-            // Group by Date jika perlu, tapi request ini list flat
-            const sortedData = [...appData].reverse(); 
+            let processedData = [...appData].reverse(); 
 
-            sortedData.forEach(item => {
+            // Filter Process
+            if (activeFilterDate) {
+                processedData = processedData.filter(item => item.date === activeFilterDate);
+            }
+
+            // Empty State
+            if (processedData.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 opacity-50 flex flex-col items-center">
+                        <div class="bg-slate-100 p-4 rounded-full mb-3">
+                            <i class="fa-solid fa-box-open text-2xl text-slate-300"></i>
+                        </div>
+                        <p class="text-sm text-slate-400 font-medium">Belum ada data ${activeFilterDate ? 'di tanggal ini' : ''}.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            processedData.forEach(item => {
                 const isDone = item.isDone;
-                const cardClass = isDone ? 'bg-green-50 border-green-200' : 'bg-white border-slate-100';
+                // Styling dinamis: Hijau Pastel jika Done
+                const cardClass = isDone 
+                    ? 'bg-emerald-50/60 border-emerald-200' 
+                    : 'bg-white border-slate-200';
                 
-                // Cek apakah input solusi sedang dibuka oleh user
                 const isInputOpen = openSolutionInputs[item.id] === true;
                 const inputDisplay = isInputOpen ? 'block' : 'hidden';
 
                 let solutionsHtml = '';
                 if (item.solutions && item.solutions.length > 0) {
                     solutionsHtml = item.solutions.map(sol => `
-                        <div class="flex justify-between items-start text-xs bg-slate-50/50 p-2 rounded border border-slate-100 mt-2 group">
-                            <div class="flex gap-2">
-                                <i class="fa-solid fa-turn-up fa-rotate-90 text-slate-300 mt-1"></i>
-                                <span class="text-slate-600">${sol.text}</span>
+                        <div class="flex justify-between items-start text-xs bg-white/60 p-2.5 rounded-lg border border-slate-100 mt-2 group hover:border-blue-100 transition">
+                            <div class="flex gap-2.5">
+                                <i class="fa-solid fa-reply fa-rotate-180 text-slate-300 mt-0.5"></i>
+                                <span class="text-slate-600 font-medium leading-relaxed">${sol.text}</span>
                             </div>
-                            <button onclick="deleteSolution('${item.id}', '${sol.id}')" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition">
+                            <button onclick="deleteSolution('${item.id}', '${sol.id}')" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition p-1">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
@@ -242,37 +305,41 @@
                 }
 
                 const html = `
-                <div class="${cardClass} rounded-xl p-5 shadow-sm border transition-colors duration-300">
+                <div class="${cardClass} rounded-2xl p-5 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] border transition-all duration-300 animate-fade-in group hover:shadow-md">
                     <div class="flex justify-between items-start mb-2">
-                        <div>
-                            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">${item.date}</span>
-                            <p class="font-medium text-slate-800 mt-1 leading-snug">${item.text}</p>
+                        <div class="pr-4">
+                            <span class="inline-flex items-center gap-1.5 text-[10px] uppercase font-bold ${activeFilterDate ? 'text-blue-500' : 'text-slate-400'} tracking-wider mb-1">
+                                <i class="fa-regular fa-clock"></i> ${item.date}
+                            </span>
+                            <p class="text-sm font-semibold text-slate-800 leading-snug">${item.text}</p>
                         </div>
-                        <div class="flex gap-1">
+                        <div class="flex gap-1 shrink-0">
                             ${isDone ? 
-                                `<button onclick="toggleStatus('${item.id}', false)" class="text-xs bg-white text-slate-500 border border-slate-200 px-3 py-1 rounded-full hover:bg-slate-50 font-medium">
-                                    <i class="fa-solid fa-rotate-left mr-1"></i> Undo
+                                `<button onclick="toggleStatus('${item.id}', false)" class="text-[10px] bg-white text-slate-500 border border-slate-200 px-2.5 py-1 rounded-full hover:bg-slate-50 font-bold transition shadow-sm">
+                                    <i class="fa-solid fa-rotate-left mr-1"></i> UNDO
                                  </button>` : 
-                                `<button onclick="toggleStatus('${item.id}', true)" class="text-xs bg-slate-800 text-white border border-slate-800 px-3 py-1 rounded-full hover:bg-slate-700 font-medium shadow-md shadow-slate-200">
-                                    Done <i class="fa-solid fa-check ml-1"></i>
+                                `<button onclick="toggleStatus('${item.id}', true)" class="text-[10px] bg-slate-800 text-white border border-slate-800 px-2.5 py-1 rounded-full hover:bg-slate-700 font-bold shadow-lg shadow-slate-200 transition active:scale-95">
+                                    DONE <i class="fa-solid fa-check ml-1"></i>
                                  </button>`
                             }
                         </div>
                     </div>
 
-                    <div class="mt-3 pl-2 border-l-2 border-slate-100">
+                    <div class="mt-3 pl-1 space-y-1">
                         ${solutionsHtml}
                     </div>
 
-                    <div class="mt-3">
-                        <button onclick="showSolutionInput('${item.id}')" class="text-xs text-blue-500 font-medium hover:text-blue-600 flex items-center gap-1 mt-2">
-                            <i class="fa-solid fa-plus"></i> Tambahkan Solusi
+                    <div class="mt-4 pt-3 border-t border-slate-100/50">
+                        <button onclick="showSolutionInput('${item.id}')" class="text-xs text-blue-500 font-bold hover:text-blue-600 flex items-center gap-1.5 transition px-2 py-1 rounded hover:bg-blue-50 -ml-2">
+                            <i class="fa-solid fa-plus-circle"></i> Tambah Solusi
                         </button>
                         
                         <div id="sol-input-${item.id}" class="${inputDisplay} mt-2 animate-fade-in">
-                            <div class="flex gap-2">
-                                <input type="text" id="sol-text-${item.id}" placeholder="Ketik solusi..." class="w-full text-xs bg-white border border-blue-200 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                                <button onclick="sendSolution('${item.id}')" class="bg-blue-500 text-white rounded px-3 py-1 hover:bg-blue-600 transition shadow-sm">
+                            <div class="flex gap-2 items-center">
+                                <input type="text" id="sol-text-${item.id}" placeholder="Ketik solusi & tekan enter..." 
+                                    onkeydown="if(event.key === 'Enter') sendSolution('${item.id}')"
+                                    class="w-full text-xs bg-white border border-blue-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-100 text-slate-700 shadow-sm">
+                                <button onclick="sendSolution('${item.id}')" class="bg-blue-500 text-white rounded-lg px-3 py-2 hover:bg-blue-600 transition shadow-md active:scale-95">
                                     <i class="fa-solid fa-paper-plane text-xs"></i>
                                 </button>
                             </div>
@@ -284,11 +351,10 @@
             });
         }
 
-        // --- ACTION HANDLERS ---
-        
+        // --- INTERACTION LOGIC ---
         function showSolutionInput(id) {
             openSolutionInputs[id] = true;
-            renderRekap(); // Re-render to show input (controlled by state)
+            renderRekap(); 
             setTimeout(() => document.getElementById(`sol-text-${id}`).focus(), 100);
         }
 
@@ -297,7 +363,6 @@
             const text = input.value;
             if (!text) return;
 
-            // Optimistic Update (UI dulu baru Server) - optional, tapi demi keamanan sync kita pakai loading state aja
             input.disabled = true;
             
             try {
@@ -306,15 +371,15 @@
                     mode: 'no-cors',
                     body: JSON.stringify({ action: 'addSolution', problemId: problemId, solutionText: text })
                 });
-                openSolutionInputs[problemId] = false; // Tutup input
-                fetchData(); // Refresh
+                openSolutionInputs[problemId] = false; 
+                fetchData(); 
                 showToast("Solusi ditambahkan");
             } catch(e) { console.error(e); }
         }
 
         async function toggleStatus(id, status) {
             try {
-                // UI update instan biar kerasa cepet
+                // Optimistic UI Update
                 const currentItem = appData.find(i => i.id === id);
                 if(currentItem) currentItem.isDone = status;
                 renderRekap();
