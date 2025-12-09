@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Notulen & Problem Solving</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        /* Animasi loading halus */
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="text-slate-700 pb-20">
+
+    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 px-4 py-4 shadow-sm">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold text-slate-800 tracking-tight">
+                <i class="fa-solid fa-clipboard-check text-blue-600 mr-2"></i>Notulen Yanoshi
+            </h1>
+            <div id="connectionStatus" class="text-xs font-medium text-emerald-600 flex items-center">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1 animate-pulse"></span> Online
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-md mx-auto px-4 mt-6 space-y-8">
+
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <h2 class="text-sm uppercase tracking-wide text-slate-400 font-bold mb-4">Input Masalah Baru</h2>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1 text-slate-600">Tanggal</label>
+                <input type="date" id="dateInput" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+            </div>
+
+            <div id="problemInputsContainer" class="space-y-3">
+                </div>
+
+            <button onclick="addInputRow()" class="mt-3 w-full py-2 border-2 border-dashed border-slate-200 text-slate-400 rounded-xl hover:border-blue-300 hover:text-blue-500 transition text-sm font-medium flex items-center justify-center gap-2">
+                <i class="fa-solid fa-plus"></i> Tambah Masalah Lainnya
+            </button>
+
+            <button onclick="submitProblems()" id="submitBtn" class="mt-6 w-full bg-slate-900 text-white py-3 rounded-xl font-semibold shadow-lg shadow-slate-200 hover:bg-slate-800 active:scale-95 transition flex justify-center items-center gap-2">
+                <span>Submit Problem</span>
+                <i class="fa-solid fa-paper-plane text-xs"></i>
+            </button>
+        </section>
+
+        <section>
+            <div class="flex justify-between items-end mb-4">
+                <h2 class="text-sm uppercase tracking-wide text-slate-400 font-bold">Rekapitulasi</h2>
+                <button onclick="fetchData()" class="text-xs text-blue-500 hover:underline">Refresh Manual</button>
+            </div>
+            
+            <div id="loadingIndicator" class="hidden text-center py-10">
+                <i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-500"></i>
+                <p class="text-xs text-slate-400 mt-2">Sinkronisasi data...</p>
+            </div>
+
+            <div id="rekapContainer" class="space-y-4 pb-10">
+                </div>
+        </section>
+
+    </main>
+
+    <div id="toast" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-full shadow-xl opacity-0 transition-opacity duration-300 pointer-events-none z-50 flex items-center gap-2">
+        <i class="fa-solid fa-info-circle"></i> <span id="toastMsg">Notification</span>
+    </div>
+
+    <script>
+        // --- KONFIGURASI ---
+        // GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT ANDA
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyJPqQGeDeLZgoF3rLgh5nDaMDBk5cbbcTy26D1zC4QWLfXa7S_BVbNLhlWjLt3BzJD/exec'; 
+
+        // --- STATE MANAGEMENT ---
+        let appData = [];
+        let openSolutionInputs = {}; // Menyimpan state kolom input solusi yang sedang terbuka
+
+        // --- LOCAL STORAGE & INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set Default Date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dateInput').value = today;
+
+            // Load Draft Problem Inputs
+            loadDrafts();
+
+            // Initial Fetch
+            fetchData();
+
+            // Polling Real-time (Setiap 4 detik)
+            setInterval(fetchData, 4000);
+        });
+
+        // --- INPUT LOGIC ---
+        const container = document.getElementById('problemInputsContainer');
+
+        function createInputRow(value = '') {
+            const div = document.createElement('div');
+            div.className = 'flex gap-2 items-center fade-in';
+            div.innerHTML = `
+                <div class="relative w-full">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-circle-exclamation text-slate-300 text-xs"></i>
+                    </div>
+                    <input type="text" value="${value}" 
+                        oninput="saveDrafts()"
+                        placeholder="Tulis masalah..." 
+                        class="problem-input w-full bg-white border border-slate-200 rounded-lg pl-9 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm shadow-sm">
+                </div>
+                ${container.children.length > 0 ? `
+                <button onclick="this.parentElement.remove(); saveDrafts()" class="text-slate-300 hover:text-red-400 p-2">
+                    <i class="fa-solid fa-times"></i>
+                </button>` : ''}
+            `;
+            container.appendChild(div);
+        }
+
+        function addInputRow() {
+            createInputRow();
+            saveDrafts();
+        }
+
+        function saveDrafts() {
+            const inputs = Array.from(document.querySelectorAll('.problem-input')).map(i => i.value);
+            localStorage.setItem('draft_problems', JSON.stringify(inputs));
+        }
+
+        function loadDrafts() {
+            const saved = JSON.parse(localStorage.getItem('draft_problems') || '[]');
+            if (saved.length > 0) {
+                saved.forEach(val => createInputRow(val));
+            } else {
+                createInputRow(); // Default 1 row
+            }
+        }
+
+        // --- API INTERACTION ---
+        async function submitProblems() {
+            const btn = document.getElementById('submitBtn');
+            const inputs = Array.from(document.querySelectorAll('.problem-input')).filter(i => i.value.trim() !== "");
+            const date = document.getElementById('dateInput').value;
+
+            if (inputs.length === 0) {
+                showToast("Mohon isi masalah terlebih dahulu");
+                return;
+            }
+
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...`;
+            btn.disabled = true;
+
+            const payload = inputs.map(i => ({ text: i.value }));
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // GAS simple mode
+                    body: JSON.stringify({ action: 'submitProblems', date: date, payload: payload })
+                });
+                
+                // Clear inputs
+                container.innerHTML = '';
+                createInputRow();
+                localStorage.removeItem('draft_problems');
+                showToast("Masalah berhasil disubmit!");
+                
+                // Refresh data segera
+                await fetchData(); 
+
+            } catch (e) {
+                showToast("Gagal mengirim data.");
+                console.error(e);
+            } finally {
+                btn.innerHTML = `<span>Submit ke Rekap</span><i class="fa-solid fa-paper-plane text-xs"></i>`;
+                btn.disabled = false;
+            }
+        }
+
+        async function fetchData() {
+            const loading = document.getElementById('loadingIndicator');
+            // Hanya tampilkan loading jika data kosong (initial load) agar tidak mengganggu user saat polling
+            if (appData.length === 0) loading.classList.remove('hidden');
+
+            try {
+                const response = await fetch(API_URL);
+                const result = await response.json();
+                
+                // Simple Diff Check (biar ga render ulang kalau data sama persis)
+                if (JSON.stringify(result) !== JSON.stringify(appData)) {
+                    appData = result;
+                    renderRekap();
+                }
+            } catch (e) {
+                console.error("Sync error", e);
+                document.getElementById('connectionStatus').innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500 mr-1"></span> Offline`;
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
+
+        // --- RENDERING LOGIC ---
+        function renderRekap() {
+            const container = document.getElementById('rekapContainer');
+            container.innerHTML = '';
+
+            // Sort by latest (bisa disesuaikan)
+            // Group by Date jika perlu, tapi request ini list flat
+            const sortedData = [...appData].reverse(); 
+
+            sortedData.forEach(item => {
+                const isDone = item.isDone;
+                const cardClass = isDone ? 'bg-green-50 border-green-200' : 'bg-white border-slate-100';
+                
+                // Cek apakah input solusi sedang dibuka oleh user
+                const isInputOpen = openSolutionInputs[item.id] === true;
+                const inputDisplay = isInputOpen ? 'block' : 'hidden';
+
+                let solutionsHtml = '';
+                if (item.solutions && item.solutions.length > 0) {
+                    solutionsHtml = item.solutions.map(sol => `
+                        <div class="flex justify-between items-start text-xs bg-slate-50/50 p-2 rounded border border-slate-100 mt-2 group">
+                            <div class="flex gap-2">
+                                <i class="fa-solid fa-turn-up fa-rotate-90 text-slate-300 mt-1"></i>
+                                <span class="text-slate-600">${sol.text}</span>
+                            </div>
+                            <button onclick="deleteSolution('${item.id}', '${sol.id}')" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    `).join('');
+                }
+
+                const html = `
+                <div class="${cardClass} rounded-xl p-5 shadow-sm border transition-colors duration-300">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">${item.date}</span>
+                            <p class="font-medium text-slate-800 mt-1 leading-snug">${item.text}</p>
+                        </div>
+                        <div class="flex gap-1">
+                            ${isDone ? 
+                                `<button onclick="toggleStatus('${item.id}', false)" class="text-xs bg-white text-slate-500 border border-slate-200 px-3 py-1 rounded-full hover:bg-slate-50 font-medium">
+                                    <i class="fa-solid fa-rotate-left mr-1"></i> Undo
+                                 </button>` : 
+                                `<button onclick="toggleStatus('${item.id}', true)" class="text-xs bg-slate-800 text-white border border-slate-800 px-3 py-1 rounded-full hover:bg-slate-700 font-medium shadow-md shadow-slate-200">
+                                    Done <i class="fa-solid fa-check ml-1"></i>
+                                 </button>`
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mt-3 pl-2 border-l-2 border-slate-100">
+                        ${solutionsHtml}
+                    </div>
+
+                    <div class="mt-3">
+                        <button onclick="showSolutionInput('${item.id}')" class="text-xs text-blue-500 font-medium hover:text-blue-600 flex items-center gap-1 mt-2">
+                            <i class="fa-solid fa-plus"></i> Tambahkan Solusi
+                        </button>
+                        
+                        <div id="sol-input-${item.id}" class="${inputDisplay} mt-2 animate-fade-in">
+                            <div class="flex gap-2">
+                                <input type="text" id="sol-text-${item.id}" placeholder="Ketik solusi..." class="w-full text-xs bg-white border border-blue-200 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                                <button onclick="sendSolution('${item.id}')" class="bg-blue-500 text-white rounded px-3 py-1 hover:bg-blue-600 transition shadow-sm">
+                                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        // --- ACTION HANDLERS ---
+        
+        function showSolutionInput(id) {
+            openSolutionInputs[id] = true;
+            renderRekap(); // Re-render to show input (controlled by state)
+            setTimeout(() => document.getElementById(`sol-text-${id}`).focus(), 100);
+        }
+
+        async function sendSolution(problemId) {
+            const input = document.getElementById(`sol-text-${problemId}`);
+            const text = input.value;
+            if (!text) return;
+
+            // Optimistic Update (UI dulu baru Server) - optional, tapi demi keamanan sync kita pakai loading state aja
+            input.disabled = true;
+            
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ action: 'addSolution', problemId: problemId, solutionText: text })
+                });
+                openSolutionInputs[problemId] = false; // Tutup input
+                fetchData(); // Refresh
+                showToast("Solusi ditambahkan");
+            } catch(e) { console.error(e); }
+        }
+
+        async function toggleStatus(id, status) {
+            try {
+                // UI update instan biar kerasa cepet
+                const currentItem = appData.find(i => i.id === id);
+                if(currentItem) currentItem.isDone = status;
+                renderRekap();
+
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ action: 'toggleStatus', problemId: id, isDone: status })
+                });
+                fetchData();
+            } catch(e) { console.error(e); }
+        }
+
+        async function deleteSolution(probId, solId) {
+            if(!confirm("Hapus solusi ini?")) return;
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ action: 'deleteSolution', problemId: probId, solutionId: solId })
+                });
+                fetchData();
+                showToast("Solusi dihapus");
+            } catch(e) { console.error(e); }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            t.classList.remove('opacity-0', 'translate-y-10');
+            setTimeout(() => t.classList.add('opacity-0', 'translate-y-10'), 3000);
+        }
+
+    </script>
+</body>
+</html>
